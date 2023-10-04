@@ -62,11 +62,11 @@ const EditProfile = () => {
         }
         if (event.target.files[0] == null) return;
         const imageRef = ref(storage, `images/${event.target.files[0].name + v4()}`);
-        toast.info("Uploading Image", {position: "top-center", autoClose: 500,});
+        toast.info("Đang tải ảnh", {position: "top-center", autoClose: 500,});
         uploadBytes(imageRef, event.target.files[0]).then((snapshot) => {
             getDownloadURL(snapshot.ref).then((url) => {
                 setAccount({...account, avatar: url});
-                toast.success("Upload Image success", {position: "top-center", autoClose: 2000,});
+                toast.success("Tải ảnh thành công", {position: "top-center", autoClose: 2000,});
             });
         })
     }
