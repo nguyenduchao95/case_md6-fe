@@ -83,43 +83,42 @@ const ChangePassword = () => {
 
                                         <Form>
                                             <div className="form-outline mb-4">
+                                                <div>
+                                                    <label className="form-label" htmlFor="password">Mật khẩu hiện tại</label>
+                                                </div>
                                                 <Field type="text" id="password" name="password"
                                                        className="form-control form-control-lg"
                                                        onInput={(event) => {
                                                            setAccount({...account, password: event.target.value})
                                                        }}/>
-                                                <div>
-                                                    <label className="form-label" htmlFor="password">Mật khẩu hiện
-                                                        tại</label>
-                                                </div>
+
                                             </div>
                                             <div className="form-outline mb-4">
+                                                <div>
+                                                    <label className="form-label" htmlFor="newPassword">Mật khẩu mới </label>
+                                                </div>
                                                 <Field type="password" id="newPassword" name="newPassword"
                                                        className="form-control form-control-lg"
                                                 />
-                                                <div>
-                                                    <label className="form-label" htmlFor="newPassword">Mật khẩu
-                                                        mới </label>
-                                                </div>
+
                                                 <span style={{color: 'red'}}>
                                         <ErrorMessage name={'newPassword'}></ErrorMessage>
                                    </span>
                                             </div>
                                             <div className="form-outline mb-4">
+                                                <div>
+                                                    <label className="form-label" htmlFor="confirmNewPassword">Xác nhận mật khẩu mới</label>
+                                                </div>
                                                 <Field type="password" id="confirmNewPassword" name="confirmNewPassword"
                                                        className="form-control form-control-lg"
                                                 />
-                                                <div>
-                                                    <label className="form-label" htmlFor="confirmNewPassword">Xác nhận
-                                                        mật khẩu mới</label>
-                                                </div>
                                                 <span style={{color: 'red'}}>
                                         <ErrorMessage name={'confirmNewPassword'}></ErrorMessage>
                                    </span>
                                             </div>
-                                            <hr className="my-4"/>
+
                                             <button className="btn btn-lg btn-block btn-primary"
-                                                    style={{backgroundColor: "#39dd86 ", color: "black"}}
+                                                    style={{backgroundColor: "#39dd86 ", color: "#fff"}}
                                                     type="submit">
                                                 Xác nhận thay đổi
                                             </button>
