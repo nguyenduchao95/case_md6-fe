@@ -5,30 +5,36 @@ const HouseByIdService = {
     getHousesByOwnerId: (ownerId, currentPage) => {
         return new Promise((resolve, reject) => {
             axios
-                .get('http://localhost:8080/api/houses/owner/' + ownerId + "?page=" + currentPage )
+                .get('http://localhost:8080/api/houses/owner/' + ownerId + "?page=" + currentPage)
                 .then(response => {
                     resolve(response.data);
                 })
                 .catch(function (err) {
-                    reject(err=>console.log(err))
+                    reject(err => console.log(err))
                 });
         })
     },
 
-    getAllHouse: ( currentPage) => {
+
+    getAllHouseByPriceAndProvince: (currentPage = 0, nameSearch = "", province = "", minPrice = 0, maxPrice = 0) => {
         return new Promise((resolve, reject) => {
+            const formattedProvince = province.replace(/\s/g, "_");
+            console.log(`http://localhost:8080/api/houses/search?page=${currentPage}&nameSearch=${nameSearch}&province=${formattedProvince}&minPrice=${minPrice}&maxPrice=${maxPrice}`);
+
             axios
-                .get('http://localhost:8080/api/houses?page=' + currentPage )
+                .get(`http://localhost:8080/api/houses/search?page=${currentPage}&nameSearch=${nameSearch}&province=${formattedProvince}&minPrice=${minPrice}&maxPrice=${maxPrice}`)
                 .then(response => {
                     resolve(response.data);
+                    console.log(response.data);
                 })
                 .catch(function (err) {
-                    reject(err=>console.log(err))
+                    reject(err => console.log(err));
                 });
-        })
+        });
     },
 
-    findByOwnerIdAndNameContains: (ownerId, name,currentPage) => {
+
+    findByOwnerIdAndNameContains: (ownerId, name, currentPage) => {
         return new Promise((resolve, reject) => {
             axios
                 .get('http://localhost:8080/api/houses/owner/by-name/' + ownerId + "?name=" + name + "&page=" + currentPage)
@@ -42,7 +48,7 @@ const HouseByIdService = {
     },
 
 
-    findByOwnerIdAndStatus: (ownerId, status,currentPage) => {
+    findByOwnerIdAndStatus: (ownerId, status, currentPage) => {
         return new Promise((resolve, reject) => {
             axios
                 .get('http://localhost:8080/api/houses/owner/by-status/' + ownerId + "?status=" + status + "&page=" + currentPage)

@@ -47,9 +47,6 @@ const ByNameAndStatus = () => {
     };
 
 
-
-
-
     useEffect(() => {
         checkSearchName(2, search.search,currentPage-1);
     }, [search,currentPage])

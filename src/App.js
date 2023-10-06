@@ -11,6 +11,7 @@ import HouseByIdUser from "./components/houseByIdOwner/HouseByIdUser";
 import ByOwnerId from "./components/houseByIdOwner/ByOwnerId";
 import ByNameAndStatus from "./components/houseByIdOwner/ByNameAndStatus";
 import Footer from "./component/Footer";
+import GetAllHouse from "./component/GetAllHouse";
 
 
 function App() {
@@ -18,7 +19,10 @@ function App() {
         <div className="App">
             <NavbarComponent/>
             <Routes>
-                <Route path={"/"} element={<HouseComponent/>}/>
+                <Route path={"/"} element={<HouseComponent/>}>
+                    {/*<Route path={"/name/:search"} element={<GetAllHouse/>}/>*/}
+                    {/*<Route path={"/price/:search"} element={<GetAllHouse/>}/>*/}
+                </Route>
                 <Route path={"/register"} element={<Register/>}/>
                 <Route path="/house-detail/:houseId" element={<HouseDetail/>}/>
                 <Route path={"/login"} element={<Login/>}/>

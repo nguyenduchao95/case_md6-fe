@@ -10,21 +10,59 @@ const HouseComponent = () => {
     const [provinces, setProvinces] = useState([]);
     const [houses, setHouses] = useState([]);
     const [currentPage, setCurrentPage] = useState(1);
-    const [totalPages, setTotalPages] = useState(0);
+    const [totalPages, setTotalPages] = useState(1);
+    const [nameSearch, setNameSearch] = useState("")
+    const [minPrice, setMinPrice] = useState(0)
+    const [maxPrice, setMaxPrice] = useState(0)
+    const [province, setProvince] = useState("")
+    const changePage = (e, value) => {
+        setCurrentPage(value);
+    }
+    const handleNameSearchChange = (event) => {
+        setCurrentPage(1);
+        setNameSearch(event.target.value)
+    };
+    const handleOptionLocalChange = (event) => {
+        setCurrentPage(1);
+        const provinceOption = event.target.value;
+        if (provinceOption !== "Vị trí") setProvince(event.target.value)
+        else setProvince("");
+    };
+    const handleOptionChange = (event) => {
+        setCurrentPage(1)
+        const price = event.target.value;
+        if (price === "1") {
+            setMinPrice(0);
+            setMaxPrice(1999999)
+        }
+        if (price === "2") {
+            setMinPrice(2000000);
+            setMaxPrice(2999999)
+        }
+        if (price === "3") {
+            setMinPrice(3000000);
+            setMaxPrice(0)
+        }
+        if (price === "Khoảng giá") {
+            setMinPrice(0);
+            setMaxPrice(0);
+        }
+    };
 
-   const changePage = (e, value) =>{
-       setCurrentPage(value)
-   }
-    const getAllHouse = (currentPage) => {
-        houseByIdService.getAllHouse(currentPage)
+
+    const getAllHouseByPriceAndProvince = (currentPage, nameSearch, province, minPrice, maxPrice) => {
+        houseByIdService.getAllHouseByPriceAndProvince(currentPage, nameSearch, province, minPrice, maxPrice)
             .then((houses) => {
                 setHouses(houses.content);
                 setTotalPages(houses.totalPages);
+                console.log(province)
             })
             .catch((err) => {
                 console.log(err);
             });
     };
+
+
     useEffect(() => {
         getAllProvinces().then(response => {
             setProvinces(response.data.data);
@@ -34,8 +72,9 @@ const HouseComponent = () => {
     }, [])
 
     useEffect(() => {
-        getAllHouse(currentPage -1);
-    }, [currentPage])
+        getAllHouseByPriceAndProvince(currentPage - 1, nameSearch, province, minPrice, maxPrice)
+        // getAllHouseByPrice(currentPage - 1, nameSearch, minPrice, maxPrice);
+    }, [currentPage, nameSearch, province, minPrice, maxPrice])
     return (
         <div className="container-home">
             <div className="container mb-5">
@@ -96,18 +135,18 @@ const HouseComponent = () => {
                             <div className="row g-2">
                                 <div className="col-md-4">
                                     <input type="text" className="form-control border-0 py-3"
-                                           placeholder="Nhập từ khóa tìm kiếm"/>
+                                           placeholder="Nhập từ khóa tìm kiếm" onInput={handleNameSearchChange}/>
                                 </div>
                                 <div className="col-md-4">
-                                    <select className="form-select border-0 py-3">
+                                    <select className="form-select border-0 py-3" onChange={handleOptionChange}>
                                         <option>Khoảng giá</option>
-                                        <option value="1">Dưới 1.000.000 ₫</option>
-                                        <option value="2">Từ 1.000.000 ₫ - 5.000.000 ₫</option>
-                                        <option value="3">Trên 5.000.000 ₫</option>
+                                        <option value="1">Dưới 2.000.000 ₫</option>
+                                        <option value="2">Từ 2.000.000 ₫ - 3.000.000 ₫</option>
+                                        <option value="3">Trên 3.000.000 ₫</option>
                                     </select>
                                 </div>
                                 <div className="col-md-4">
-                                    <select className="form-select border-0 py-3">
+                                    <select className="form-select border-0 py-3" onChange={handleOptionLocalChange}>
                                         <option>Vị trí</option>
                                         {!_.isEmpty(provinces) && provinces.map(province => (
                                             <option key={province.ProvinceID}
@@ -125,7 +164,6 @@ const HouseComponent = () => {
                     </div>
                 </div>
             </div>
-            {/*Search End*/}
 
 
             <div className="container py-5">
@@ -133,54 +171,55 @@ const HouseComponent = () => {
                     <div className="row g-4">
                         {
                             houses.map(house => {
-                                return (
-                                    <div className="col-lg-4 col-md-6" key={house.id}>
-                                        <div className="house-item border rounded overflow-hidden">
-                                            <div className="position-relative overflow-hidden">
-                                                <div>
-                                                    <img height={273} width={406} src={house.thumbnail} alt=""/>
+                                    return (
+                                        <div className="col-lg-4 col-md-6" key={house.id}>
+                                            <div className="house-item border rounded overflow-hidden">
+                                                <div className="position-relative overflow-hidden">
+                                                    <div>
+                                                        <img height={273} width={406} src={house.thumbnail} alt=""/>
+                                                    </div>
+                                                </div>
+                                                <div className="p-4 pb-0">
+                                                    <h5 className="mb-2 text-center">{house.name}</h5>
+                                                    <h5 className=" mb-3 color-primary text-center">{house.newPrice}
+                                                        <del
+                                                            className="text-secondary fs-6">{house.oldPrice}</del>
+                                                    </h5>
+                                                    <p>
+                                                        <i className="fa fa-map-marker-alt me-2 color-primary"></i>
+                                                        {house.address}
+                                                    </p>
+                                                </div>
+                                                <div className="d-flex border-top p-2">
+                                                    <small className="flex-fill text-center border-end py-2">
+                                                        <i className="fa fa-ruler-combined me-2 color-primary"></i>
+                                                        {house.area} m²
+                                                    </small>
+                                                    <small className="flex-fill text-center border-end py-2">
+                                                        <i className="fa fa-bed me-2 color-primary"></i>
+                                                        {house.bedroom} Ngủ
+                                                    </small>
+                                                    <small className="flex-fill text-center py-2">
+                                                        <i className="fa fa-bath  me-2 color-primary"></i>
+                                                        {house.bathroom} Tắm
+                                                    </small>
                                                 </div>
                                             </div>
-                                            <div className="p-4 pb-0">
-                                                <h5 className="mb-2 text-center">{house.name}</h5>
-                                                <h5 className=" mb-3 color-primary text-center">{house.newPrice}
-                                                    <del
-                                                        className="text-secondary fs-6">{house.oldPrice}</del>
-                                                </h5>
-                                                <p>
-                                                    <i className="fa fa-map-marker-alt me-2 color-primary"></i>
-                                                    {house.address}
-                                                </p>
-                                            </div>
-                                            <div className="d-flex border-top p-2">
-                                                <small className="flex-fill text-center border-end py-2">
-                                                    <i className="fa fa-ruler-combined me-2 color-primary"></i>
-                                                    {house.area} m²
-                                                </small>
-                                                <small className="flex-fill text-center border-end py-2">
-                                                    <i className="fa fa-bed me-2 color-primary"></i>
-                                                    {house.bedroom} Ngủ
-                                                </small>
-                                                <small className="flex-fill text-center py-2">
-                                                    <i className="fa fa-bath  me-2 color-primary"></i>
-                                                    {house.bathroom} Tắm
-                                                </small>
-                                            </div>
                                         </div>
-                                    </div>
-                                )}
+                                    )
+                                }
                             )}
 
                         <div className="col-12 mt-5 d-flex justify-content-center">
-                            <Pagination count={totalPages} size="large" variant="outlined" shape="rounded" onChange={changePage} color="primary"/>
+                            <Pagination count={totalPages} size="large" variant="outlined" shape="rounded"
+                                        onChange={changePage} color="primary"/>
                         </div>
 
-                        <AdminTeam/>
 
                     </div>
                 </div>
-
             </div>
+            <AdminTeam/>
         </div>
     )
 };
