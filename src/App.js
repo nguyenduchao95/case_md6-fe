@@ -9,7 +9,6 @@ import Register from "./components/Login-Register/register";
 import HouseDetail from "./components/HouseDetail/HouseDetail";
 import Login from "./components/Login-Register/login";
 import ForgotPassword from "./components/Login-Register/forgot-password";
-import AddHouse from "./components/CreateHouse/AddHouse";
 import HouseByIdUser from "./components/houseByIdOwner/HouseByIdUser";
 import ByOwnerId from "./components/houseByIdOwner/ByOwnerId";
 import ByNameAndStatus from "./components/houseByIdOwner/ByNameAndStatus";
@@ -17,8 +16,7 @@ import Profile from "./account/crud/Profile";
 import EditProfile from "./account/crud/EditProfile";
 import ChangePassword from "./account/crud/ChangePassword";
 import Footer from "./components/Footer/Footer";
-
-
+import SaveHouse from "./components/CreateAndEditHouse/SaveHouse";
 
 
 
@@ -33,7 +31,8 @@ function App() {
                 <Route path="/house-detail/:houseId" element={<HouseDetail/>}/>
                 <Route path={"/login"} element={<Login setShow={setShow} />}/>
                 <Route path={"/forgot"} element={<ForgotPassword/>}/>
-                <Route path="/add" element={<AddHouse/>}/>
+                <Route path="/add" element={<SaveHouse/>}/>
+                <Route path="/edit/:houseId" element={<SaveHouse/>}/>
                 <Route path={"/houses-owner"} element={<HouseByIdUser/>}>
                     <Route path={"/houses-owner"} element={<ByOwnerId/>}/>
                     <Route path={"/houses-owner/search/:search"} element={<ByNameAndStatus/>}/>
