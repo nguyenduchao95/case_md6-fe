@@ -258,7 +258,6 @@ const EditProfile = ({status}) => {
                                 handleProfile(values);
                             } else {
                                 if (fileFront && fileBack ) {
-                                    console.log(values.avatar);
                                     handleRegisterOwner(values);
                                 } else if (!fileFront && !fileBack ) {
                                     document.getElementById("frontside-errors").innerHTML = "Bạn chưa chọn mặt trước CCCD";
