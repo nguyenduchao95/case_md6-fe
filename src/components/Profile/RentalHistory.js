@@ -167,7 +167,7 @@ const RentalHistory = () => {
                         </div>
                         <div className="col-2">
                             <div className="input-group">
-                                <input type="date" className="form-control" name="endTime" onChange={handleEndTime} value={endTime}  />
+                                <input type="date" className="form-control" name="endTime" onChange={handleEndTime} min={startTime} value={endTime}  />
                             </div>
                         </div>
                     </div>
