@@ -16,23 +16,31 @@ function Login({setShow}) {
     const [showPassword, setShowPassword] = useState(false);
     const [checkPassword, setCheckPassword] = useState("");
     const [remember, setRemember] = useState(true);
+    const [accountStatus, setAccountStatus] = useState(null); // Add accountStatus state
+
     const toggleShowPassword = () => {
         setShowPassword(!showPassword);
     };
 
     const login = (value) => {
         LoginRegisterService.login(value)
-            .then(res => {
-                if (remember) {
-                    localStorage.setItem("account", JSON.stringify(res.data));
+            .then((res) => {
+                const { status } = res.data;
+
+                if (status === 'Bị khóa') {
+                    setAccountStatus(status);
+                } else {
+                    if (remember) {
+                        localStorage.setItem('account', JSON.stringify(res.data));
+                    }
+                    dispatch(saveAccount(res.data));
+                    setShow(true);
+                    navigate('/');
                 }
-                dispatch(saveAccount(res.data));
-                setShow(true);
-                navigate("/");
             })
-            .catch(err => {
-                setCheckPassword("Sai mật khẩu");
-            })
+            .catch((err) => {
+                setCheckPassword('Sai mật khẩu');
+            });
     }
 
     return (
@@ -67,6 +75,7 @@ function Login({setShow}) {
                                                     </div>
                                                     <ErrorMessage name="username" className="text-danger"
                                                                   component="div"/>
+
                                                 </div>
                                                 <div className="form-group py-1 mt-2">
                                                     <label className="form-label">Mật khẩu</label>

@@ -42,8 +42,14 @@ const loginSchema = Yup.object({
     username: Yup.string()
         .required('Vui lòng nhập tên đăng nhập')
         .test('Check username', 'Tên đăng nhập không tồn tại', async (value) => {
-            const checkUser = await LoginRegisterService.checkUsername(value);
-            return checkUser.data;
+            const account = await LoginRegisterService.checkUsername(value);
+            if (account.data.username == null) {
+                return false;
+            }
+            if (account.data.status === 'Bị khóa') {
+                throw new Yup.ValidationError('Tài khoản bị khóa, vui lòng liên hệ admin', value, 'username');
+            }
+            return true;
         }),
     password: Yup.string()
         .required('Vui lòng nhập mật khẩu')
