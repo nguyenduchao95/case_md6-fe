@@ -5,6 +5,9 @@ import HouseComponent from "./HouseComponent";
 import houseByIdService from "../../service/HouseByIdService";
 import SearchHouse from "./SearchHouse";
 import Top5BookingHouse from "./Top5BookingHouse";
+import {useSelector} from "react-redux";
+import Swal from "sweetalert2";
+import {useNavigate} from "react-router-dom";
 
 const HomePage = () => {
     const [currentPage, setCurrentPage] = useState(1);
@@ -14,6 +17,8 @@ const HomePage = () => {
     const [maxPrice, setMaxPrice] = useState(0);
     const [province, setProvince] = useState("");
     const [houses, setHouses] = useState([]);
+    const  account = useSelector(state => state.account);
+    const nagivate = useNavigate();
 
     const changePage = (e, value) => {
         setCurrentPage(value);
@@ -29,11 +34,29 @@ const HomePage = () => {
                 console.log(err);
             });
     };
+    useEffect(() => {
+        getAllHouseByPriceAndProvince(currentPage - 1, nameSearch, province, minPrice, maxPrice);
+    }, [currentPage, nameSearch, province, minPrice, maxPrice]);
 
     useEffect(() => {
-        getAllHouseByPriceAndProvince(currentPage - 1, nameSearch, province, minPrice, maxPrice)
-    }, [currentPage, nameSearch, province, minPrice, maxPrice])
+        if (account.firstname == null){
+            console.log(account.firstname);
+            checkInfoAccount();
+        }
+    },[])
 
+    const checkInfoAccount = () => {
+        Swal.fire({
+            title: 'Bạn chưa đầy đủ thông tin cá nhân. Vui lòng cập nhật đầy đủ thông tin?',
+            icon: 'warning',
+            confirmButtonText: 'Xác nhận',
+            allowOutsideClick: false
+        }).then((result) => {
+            if (result.isConfirmed) {
+               nagivate('/profile/edit-profile');
+            }
+        })
+    }
 
     return (
         <div className="container-home">
